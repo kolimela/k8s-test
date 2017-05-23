@@ -40,7 +40,7 @@ Before start running playbook make sure that All machines running Ubuntu 16.04, 
 
 #Usage 
 
-To run all playbooks `ansible-playbook -i hosts kubernetes.yml` To run just one playbook use tags:(see main.yml) 
+To run all playbooks `ansible-playbook -i hosts all.yml` To run just one playbook use tags:(see main.yml) 
 
 #Inventory 
 
@@ -49,29 +49,32 @@ Machine inventory is specified statically in the host file before executing play
 #Included playbooks
 
 #1-k8s-common 
+
 This installs docker, kublet, kubeadm, kubectl and kubernetes-cni
 
 
 #2-k8s-master 
+
 Initializing your master - To initialize the master, pick one of the machines you previously installed kubelet and kubeadm This will download and install the cluster database and “control plane” components. This may take several minutes.
 
 
-#3-k8s-env-pod
-Copy the Kube environment setup file for non-root user
+#3-k8s-env-pod and Installing pod network 
+
+Copy the Kube environment setup file for non-root user.
+The network requirements from kubernetes is the following:
+All pods can communicate with each other across nodes
+All nodes can communicate with all Pods
+No Network Address Translation(NAT)
+Kubernetes expects network configuration to enable pod-to-pod communication be available – it will not do it for you. It can be achieved with a software defined overlay with solutions like Weave, Flannel or Calico among many. Hear we are using Weave Network which meets the kubernetes requirements.
 
 
 #4-k8s-join-slaves 
+
 Joining the nodes, where your workloads (containers and pods, etc) run.
+ 
 
-#Network plugin
-The network requirements from kubernetes is the following:
-•	All pods can communicate with each other across nodes
-•	All nodes can communicate with all Pods
-•	No Network Address Translation(NAT)
-Kubernetes expects network configuration to enable pod-to-pod communication be available – it will not do it for you. It can be achieved with a software defined overlay with solutions like Weave, Flannel or Calico among many. Hear we are using Weave Network which meets the kubernetes requirements. 
+#5-k8s-dashboard and status
 
-
-#dashboard deployment
 Kubernetes Dashboard is a general purpose, web-based UI for Kubernetes clusters. It allows users to manage applications running in the cluster and troubleshoot them, as well as manage the cluster itself.
 
 
